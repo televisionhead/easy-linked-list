@@ -55,7 +55,8 @@ float five = 89.23f;
 
 ### Adding items
 ```
-//add them by passing them by reference, optionally indicating their type and printer callback function if necessary
+//add them by passing them by reference
+//optionally indicate their type, and printer callback function if necessary
 mylist.add(&mylist, &one, STRING, NULL);
 
 //note only the struct needs a printer callback in last parameter in order to be printed
@@ -81,6 +82,7 @@ mylist.remove(&mylist, &five);
 printf("\n");
 mylist.print(&mylist);
 
-//don't forget to destroy the list when done, which frees the memory occupied by the internal representation
+//don't forget to destroy the list when done
+//frees the memory occupied by the internal representation
 mylist.destroy(&mylist);
 ```
