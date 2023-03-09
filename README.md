@@ -17,8 +17,9 @@ To print a custom type (struct) you have defined, you must provide a printer cal
 The struct list_internal* member of the list struct, while it is in the header, is opaque and not meant to be accessed/changed outside of list.c. It is simply the internal implementation of a linked list and its data, and you call the API functions in order to access and manipulate it. New functionality is added through these function pointer members, which operate on internal data.
 
 ### How do I run this program?
-If you are new to how compilation works and need help, take a look at compile.sh where you will find the command to compile this module into an executable provided you have the GCC compiler. Optionally add the -DNDEBUG flag (or #define NDEBUG in the code) to disable error-checking. Here is some commented example code to demonstrate usage of the API:
+If you are new to how compilation works and need help, take a look at compile.sh where you will find the command to compile this module into an executable provided you have the GCC compiler. Optionally add the -DNDEBUG flag (or #define NDEBUG in the code) to disable error-checking.
 
+### Example code
 ```
 //don't forget to include list.h
 #include "list.h"
