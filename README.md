@@ -19,7 +19,7 @@ The struct list_internal* member of the list struct, while it is in the header, 
 ### How do I run this program?
 If you are new to how compilation works and need help, take a look at compile.sh where you will find the command to compile this module into an executable provided you have the GCC compiler. Optionally add the -DNDEBUG flag (or #define NDEBUG in the code) to disable error-checking.
 
-### Example code
+### Example code from main.c
 ```
 //don't forget to include list.h
 #include "list.h"
