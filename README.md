@@ -55,13 +55,21 @@ int main() {
 	//note only the struct needs a printer callback in last parameter in order to be printed
 	mylist.add(&mylist, &two, STRUCTURE, printer);
 
-	//note we pass NULL as the type here, so it will not be printed
-	mylist.add(&mylist, &three, NULL, NULL);
+	//note we pass UNSPECIFIED as the type here, so it will not be printed
+	mylist.add(&mylist, &three, UNSPECIFIED, NULL);
 
 	mylist.add(&mylist, &four, INTEGER, NULL);
 	mylist.add(&mylist, &five, DECIMAL_F, NULL);
 
 	//print the printable items in our list
+	mylist.print(&mylist);
+
+	//remove some items by address
+	mylist.remove(&mylist, &two);
+	mylist.remove(&mylist, &five);
+
+	//print again
+	printf("\n");
 	mylist.print(&mylist);
 
 	//don't forget to destroy the list when done, which frees the memory occupied by the internal representation
