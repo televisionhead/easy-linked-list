@@ -158,6 +158,10 @@ static int list_remove_all(list* mylist, void* data) {
 	return 0;
 }
 
+static list list_split(list* mylist, int index) {
+
+}
+
 //get the number of elements in the list
 static int list_size(list* mylist) {
 	assert(mylist != NULL && "NULL passed to list_size()");
@@ -212,6 +216,7 @@ list list_create() {
 		.add = list_add,
 		.remove_first = list_remove_first,
 		.remove_all = list_remove_all,
+		.split = list_split,
 		.size = list_size,
 		.print = list_print,
 		.destroy = list_destroy
