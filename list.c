@@ -63,7 +63,7 @@ static void list_add(list* mylist, void* item, int datatype, void (*printer)(con
 
 	struct link* toadd = (struct link*)malloc(sizeof(struct link));
 	
-	assert(toadd != NULL && "malloc returned NULL! Unable to add item.");
+	assert(toadd != NULL && "malloc returned NULL in list_add()");
 
 	struct list_internal* mylist_internal = mylist->data;
 
@@ -109,7 +109,7 @@ static struct link* list_find(struct list_internal* mylist_internal, void* data)
 }
 
 //remove first occurence of item based on its data (returns -1 if not found, 0 if successfully removed)
-static int list_remove_first(list* mylist, void* data) {
+static int list_remove(list* mylist, void* data) {
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove()");
 
 	struct list_internal* mylist_internal = mylist->data;
@@ -148,18 +148,79 @@ static int list_remove_first(list* mylist, void* data) {
 
 //remove all occurences of an item with the given data (returns 0 if at least one was removed, else -1)
 static int list_remove_all(list* mylist, void* data) {
-	assert(mylist != NULL && data != NULL && "NULL passed to list_remove()");
+	assert(mylist != NULL && data != NULL && "NULL passed to list_remove_all()");
 
 	int ret;
-	if((ret = list_remove_first(mylist, data)) == -1) return -1;
+	if((ret = list_remove(mylist, data)) == -1) return -1;
 
-	while(ret == 0 && mylist->data->size != 0) ret = list_remove_first(mylist, data);
+	while(ret == 0 && mylist->data->size != 0) ret = list_remove(mylist, data);
 
 	return 0;
 }
 
+//splits a list in half at the given index and returns a new list (the right half)
 static list list_split(list* mylist, int index) {
+	assert(mylist != NULL && "NULL passed to list_split()");
+	
+	struct list_internal* mylist_internal = mylist->data;
 
+	assert(index > 0 && index < mylist_internal->size);
+
+	struct link* curr = mylist_internal->head;
+
+	for(int i = 0; i < index-1; i++) curr = curr->next;
+
+	list ret = list_create();
+	ret.data->head = curr->next;
+	ret.data->head->prev = NULL;
+	ret.data->tail = mylist_internal->tail;
+	ret.data->size = mylist_internal->size-index;
+
+	curr->next = NULL;
+	mylist_internal->tail = curr;
+	mylist_internal->size = index;
+
+	return ret;
+}
+
+//concatonate two lists, aka first += second, and second remains unchanged
+static void list_concat(list* first, list* second) {
+	assert(first != NULL && second != NULL && "NULL passed to list_concat()");
+
+	struct link* curr = second->data->head;
+
+	while(curr != NULL) {
+		first->add(first, curr->data, curr->datatype, curr->printer, curr->comparator);
+		curr = curr->next;
+	}
+}
+
+//sort the list using merge sort
+static void list_sort(list* mylist) {
+	assert(mylist != NULL && "NULL passed to list_sort()");
+
+}
+
+//reverse the order of the list (first becomes last, etc.)
+static void list_reverse(list* mylist) {
+	assert(mylist != NULL && "NULL passed to list_reverse()");
+
+	struct list_internal* mylist_internal = mylist->data;
+
+	if(mylist_internal->size == 0 || mylist_internal->size == 1) return;
+
+	struct link* prev = NULL;
+	struct link* next = NULL;
+	struct link* curr = mylist_internal->head;
+
+	while(curr != NULL) {
+		next = curr->next;
+		curr->next = prev;
+		prev = curr;
+		curr = next;
+	}
+
+	mylist_internal->head = prev;
 }
 
 //get the number of elements in the list
@@ -173,9 +234,7 @@ static int list_size(list* mylist) {
 static void list_print(list* mylist) {
 	assert(mylist != NULL && "NULL passed to list_print()");
 
-	struct list_internal* mylist_internal = mylist->data;
-
-	struct link* curr = mylist_internal->head;
+	struct link* curr = mylist->data->head;
 
 	while(curr != NULL) {
 		curr->printer(curr->data);
@@ -204,6 +263,8 @@ static void list_destroy(list* mylist) {
 list list_create() {
 	struct list_internal* myinternal = malloc(sizeof(struct list_internal));
 
+	assert(myinternal != NULL && "malloc returned NULL in list_create()");
+
 	myinternal->head = NULL;
 	myinternal->tail = NULL;
 	myinternal->size = 0;
@@ -214,9 +275,12 @@ list list_create() {
 
 		//API function pointers
 		.add = list_add,
-		.remove_first = list_remove_first,
+		.remove = list_remove,
 		.remove_all = list_remove_all,
 		.split = list_split,
+		.concat = list_concat,
+		.sort = list_sort,
+		.reverse = list_reverse,
 		.size = list_size,
 		.print = list_print,
 		.destroy = list_destroy
