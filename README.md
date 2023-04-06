@@ -33,3 +33,9 @@ mylist.print(&mylist);
 mylist.destroy(&mylist);
 ```
 ## API
+* All available functions and what they do can be found in list.h
+* Every function except list_create() takes a reference to a list as the first parameter
+* Valid types are UNSPECIFIED, INTEGER, STRING, CHARACTER, DECIMAL_F, DECIMAL_D, STRUCTURE
+* Use add() for primitives and add_struct() for structs
+* By default, floats and doubles print with a precision of 6 decimal places (use set_precision() to change)
+
