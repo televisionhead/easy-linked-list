@@ -26,7 +26,7 @@ mylist.print(&mylist);
 mylist.destroy(&mylist);
 ```
 ## API
-
+```c
 add(list* mylist, void* item, int datatype) //add a primitive to end of list
 add_struct(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)); //add a struct to end of list
 
@@ -49,3 +49,4 @@ reverse(list* mylist) //reverse order of list
 setprecision(list* mylist, int precision) //set number of decimal places for printing doubles and floats
 
 destroy(list* mylist) //free memory occupied by list
+```
