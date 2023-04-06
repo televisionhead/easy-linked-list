@@ -9,7 +9,6 @@ typedef struct list {
 	void (*const add)(struct list*, void*, int); //add a primitive to the end of the list. just calls list_add_end with printer and comparator set to NULL 
 	void (*const add_struct)(struct list*, void*, int, void (*)(const void*), int (*)(const void*, const void*)); //add a struct to the end of the list. just calls list_add_end with the values you pass for printer and comparator
 	int (*const remove_first)(struct list*, void*); //remove first occurence of item based on its data (returns -1 if not found, 0 if successfully removed)
-	int (*const remove_all)(struct list*, void*); //remove all occurences of an item with the given data (returns 0 if at least one was removed, else -1)
 	int (*const remove)(struct list*, void*); //just calls list_remove_all if your too lazy to type remove_all
 	void (*const print)(struct list*); //print every element of the list
 	int (*const size)(struct list*); //get the number of elements in the list

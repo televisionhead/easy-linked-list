@@ -333,7 +333,6 @@ list list_create() {
 		.add = list_add,
 		.add_struct = list_add_struct,
 		.remove_first = list_remove_first,
-		.remove_all = list_remove_all,
 		.remove = list_remove,
 		.print = list_print,
 		.size = list_size,
