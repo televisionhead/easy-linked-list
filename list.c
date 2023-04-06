@@ -226,6 +226,7 @@ static void list_sort(list* mylist) {
 	list_sort(secondptr);
 
 	mylist->data->head = list_merge(mylist->data->head, secondptr->data->head);
+	mylist->data->size = size;
 
 	//free the internal representation of second list, but not all the elements
 	free(secondptr->data);
