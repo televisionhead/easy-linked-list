@@ -24,7 +24,7 @@ mylist.add(&mylist, &second, STRING);
 mylist.add(&mylist, &third, DECIMAL_F);
 
 //remove an item
-mylist.remove(&mylist, &first)
+mylist.remove(&mylist, &first);
 
 //print list contents
 mylist.print(&mylist);
@@ -42,6 +42,10 @@ mylist.destroy(&mylist);
 * Comparator functions return an int and take two const void* as parameters: int (*)(const void*, const void*)
 * Use add() for primitives and add_struct() for structs
 * You can only sort() a list if all its elements have the same type and it does not contain any UNSPECIFIED items
+* Sort uses merge_sort(), in case you were wondering
 * By default, floats and doubles print with a precision of 6 decimal places (use set_precision() to change)
+* Floats and doubles are compared with a tolerance of 0.000001
 * The split() function mallocs a new list, so don't forget to free it
-* When you concat() two lists, the second list is not affected but 
+* When you concat() two lists, the second list is not affected but first += second
+
+## Examples
