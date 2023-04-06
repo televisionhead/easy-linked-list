@@ -52,3 +52,42 @@ mylist.destroy(&mylist);
 * When you concat() two lists, the second list is not affected but first += second
 
 ## Examples
+### Adding a struct
+```c
+struct test {
+  int val;
+};
+
+void printer(const void* item) {
+  struct test* mystruct = (struct test*)item;
+  printf("first = %d\n", mystruct->val);
+}
+
+int comparator(const void* first, const void* second) {
+  return (*(int*)first - *(int*)second);
+}
+
+struct test mystruct = { 10 };
+
+mylist.add_struct(&mylist, &mystruct, STRUCTURE, printer, comparator); //use add_struct(), pass printer and comparator functions
+```
+### Sorting
+```c
+mylist.sort(&mylist); //make sure every element has same type and none are UNSPECIFIED
+```
+### Splitting
+```c
+list right = mylist.split(&mylist, 1); //split at index 1, make sure you free right when done
+```
+### Concatenating
+```c
+mylist.concat(&mylist, &right); //right will be unchanged, mylist += right
+```
+### Reversing
+```c
+mylist.reverse(&mylist); //reverse order of elements in list
+```
+### Setting Precision
+```c
+mylist.setprecision(&mylist, 3); //floats and doubles will be printed with 3 decimal places
+```
