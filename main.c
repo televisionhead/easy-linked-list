@@ -15,7 +15,7 @@ int main() {
 	mylist.add(&mylist, &third, DECIMAL_F);
 
 	//remove an item
-	mylist.remove(&mylist, &first)
+	mylist.remove(&mylist, &first);
 
 	//print list contents
 	mylist.print(&mylist);
