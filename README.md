@@ -2,6 +2,7 @@
 * Easy to use API
 * User-defined types
 * Multiple types per list
+* Printing
 * Sorting
 * Splitting
 * Concatenating
