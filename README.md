@@ -38,6 +38,8 @@ mylist.destroy(&mylist);
 * Valid types are UNSPECIFIED, INTEGER, STRING, CHARACTER, DECIMAL_F, DECIMAL_D, STRUCTURE
 * Items with UNSPECIFIED type cannot be printed or removed
 * Items with STRUCTURE type can only be printed and removed if you pass a printer and comparator function when adding
+* Printer functions return void and take one const void* as a parameter: void (*)(const void*)
+* Comparator functions return an int and take two const void* as parameters: int (*)(const void*, const void*)
 * Use add() for primitives and add_struct() for structs
 * You can only sort() a list if all its elements have the same type and it does not contain any UNSPECIFIED items
 * By default, floats and doubles print with a precision of 6 decimal places (use set_precision() to change)
