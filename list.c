@@ -35,13 +35,15 @@ struct list_internal {
 	int size;
 };
 
+char precisionstr[10] = "%.6f\n";
+
 //functions for printing various data types
 static void no_print(const void* data) { (void)data; } //gets rid of unused parameter warning
 static void int_print(const void* data) { printf("%d\n", *(int*)data); }
 static void str_print(const void* data) { printf("%s\n", *(char**)data); }
 static void char_print(const void* data) { printf("%c\n", *(char*)data); }
-static void decimalF_print(const void* data) { printf("%f\n", *(float*)data); }
-static void decimalD_print(const void* data) { printf("%f\n", *(double*)data); }
+static void decimalF_print(const void* data) { printf(precisionstr, *(float*)data); }
+static void decimalD_print(const void* data) { printf(precisionstr, *(double*)data); }
 
 //array of the above printer functions
 static void (*const printer_table[NUM_DATATYPES])(const void*) = { no_print, int_print, str_print, char_print, decimalF_print, decimalD_print, no_print };
@@ -57,7 +59,7 @@ static int double_compare(const void* first, const void* second) { double diff =
 static int (*const comparator_table[NUM_DATATYPES])(const void*, const void*) = { NULL, int_compare, str_compare, char_compare, float_compare, double_compare, NULL };
 
 //add an item to the end of the list
-static void list_add(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) {
+static void list_add_end(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) {
 	assert(mylist != NULL && item != NULL && "NULL passed to list_add()");
 	assert(datatype >= UNSPECIFIED && datatype <= STRUCTURE && "datatype passed to list_add() is invalid!");
 
@@ -91,6 +93,12 @@ static void list_add(list* mylist, void* item, int datatype, void (*printer)(con
 	mylist_internal->size++;
 }
 
+//add a primitive to the end of the list. just calls list_add_end with printer and comparator set to NULL 
+static void list_add(list* mylist, void* item, int datatype) { list_add_end(mylist, item, datatype, NULL, NULL); }
+
+//add a struct to the end of the list. just calls list_add_end with the values you pass for printer and comparator
+static void list_add_struct(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, datatype, printer, comparator); }
+
 //find an item based on its data (returns NULL if not found)
 static struct link* list_find(struct list_internal* mylist_internal, void* data) {
 	assert(mylist_internal != NULL && data != NULL && "NULL passed to list_find()");
@@ -109,7 +117,7 @@ static struct link* list_find(struct list_internal* mylist_internal, void* data)
 }
 
 //remove first occurence of item based on its data (returns -1 if not found, 0 if successfully removed)
-static int list_remove(list* mylist, void* data) {
+static int list_remove_first(list* mylist, void* data) {
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove()");
 
 	struct list_internal* mylist_internal = mylist->data;
@@ -151,14 +159,79 @@ static int list_remove_all(list* mylist, void* data) {
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove_all()");
 
 	int ret;
-	if((ret = list_remove(mylist, data)) == -1) return -1;
+	if((ret = list_remove_first(mylist, data)) == -1) return -1;
 
-	while(ret == 0 && mylist->data->size != 0) ret = list_remove(mylist, data);
+	while(ret == 0 && mylist->data->size != 0) ret = list_remove_first(mylist, data);
 
 	return 0;
 }
 
-//splits a list in half at the given index and returns a new list (the right half)
+//just calls list_remove_all if your too lazy to type remove_all
+static int list_remove(list* mylist, void* data) { return list_remove_all(mylist, data); }
+
+//print every element of the list
+static void list_print(list* mylist) {
+	assert(mylist != NULL && "NULL passed to list_print()");
+
+	struct link* curr = mylist->data->head;
+
+	while(curr != NULL) {
+		curr->printer(curr->data);
+		curr = curr->next;
+	}
+}
+
+//get the number of elements in the list
+static int list_size(list* mylist) {
+	assert(mylist != NULL && "NULL passed to list_size()");
+
+	return mylist->data->size;
+}
+
+//compares the two links and then recursively calls itself
+static struct link* list_merge(struct link* firsthead, struct link* secondhead) {
+	if(firsthead == NULL) return secondhead;
+	if(secondhead == NULL) return firsthead;
+
+	assert(firsthead->datatype == secondhead->datatype && "List has multiple different data types, so it cannot be sorted");
+	assert(firsthead->comparator != NULL && "Link with UNSPECIFIED data type has been encountered, so the list cannot be sorted");
+
+	if(firsthead->comparator(firsthead->data, secondhead->data) < 0) {
+		firsthead->next = list_merge(firsthead->next, secondhead);
+		firsthead->next->prev = firsthead;
+		firsthead->prev = NULL;
+		return firsthead;
+	} else {
+		secondhead->next = list_merge(firsthead, secondhead->next);
+		secondhead->next->prev = secondhead;
+		secondhead->prev = NULL;
+		return secondhead;
+	}
+}
+
+//sort the list using merge sort. list elements must all be the same data type
+static void list_sort(list* mylist) {
+	assert(mylist != NULL && "NULL passed to list_sort()");
+
+	struct list_internal* mylist_internal = mylist->data;
+
+	int size = mylist_internal->size;
+
+	if(size == 0 || size == 1) return;
+
+	list second = mylist->split(mylist, size / 2);
+	list* secondptr = &second;
+
+	list_sort(mylist);
+	list_sort(secondptr);
+
+	mylist->data->head = list_merge(mylist->data->head, secondptr->data->head);
+
+	//free the internal representation of second list, but not all the elements
+	free(secondptr->data);
+}
+
+//splits a list in half at the given index and returns a new list (the right half). dont forget to destroy the new list too when done
 static list list_split(list* mylist, int index) {
 	assert(mylist != NULL && "NULL passed to list_split()");
 	
@@ -190,15 +263,9 @@ static void list_concat(list* first, list* second) {
 	struct link* curr = second->data->head;
 
 	while(curr != NULL) {
-		first->add(first, curr->data, curr->datatype, curr->printer, curr->comparator);
+		first->add_struct(first, curr->data, curr->datatype, curr->printer, curr->comparator);
 		curr = curr->next;
 	}
-}
-
-//sort the list using merge sort
-static void list_sort(list* mylist) {
-	assert(mylist != NULL && "NULL passed to list_sort()");
-
 }
 
 //reverse the order of the list (first becomes last, etc.)
@@ -223,23 +290,12 @@ static void list_reverse(list* mylist) {
 	mylist_internal->head = prev;
 }
 
-//get the number of elements in the list
-static int list_size(list* mylist) {
-	assert(mylist != NULL && "NULL passed to list_size()");
+//set the number of decimal places for printing floats and doubles
+static void list_setprecision(list* mylist, int precision) {
+	assert(mylist != NULL && "NULL passed to list_setprecision()");
+	assert(precision > 0 && "Cannot set precision to negative or zero");
 
-	return mylist->data->size;
-}
-
-//print every element of the list
-static void list_print(list* mylist) {
-	assert(mylist != NULL && "NULL passed to list_print()");
-
-	struct link* curr = mylist->data->head;
-
-	while(curr != NULL) {
-		curr->printer(curr->data);
-		curr = curr->next;
-	}
+	sprintf(precisionstr, "%%.%df\n", precision);
 }
 
 //free the memory occupied by the list
@@ -275,14 +331,17 @@ list list_create() {
 
 		//API function pointers
 		.add = list_add,
-		.remove = list_remove,
+		.add_struct = list_add_struct,
+		.remove_first = list_remove_first,
 		.remove_all = list_remove_all,
+		.remove = list_remove,
+		.print = list_print,
+		.size = list_size,
+		.sort = list_sort,
 		.split = list_split,
 		.concat = list_concat,
-		.sort = list_sort,
 		.reverse = list_reverse,
-		.size = list_size,
-		.print = list_print,
+		.setprecision = list_setprecision,
 		.destroy = list_destroy
 	};
 
