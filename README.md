@@ -2,7 +2,7 @@
 * Easy to use API
 * User-defined types
 * Multiple types per list
-* Sorting, splitting, and more!
+* Extensive functionality
 
 ## Quickstart
 ```c
