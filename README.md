@@ -69,7 +69,8 @@ int comparator(const void* first, const void* second) {
 
 struct test mystruct = { 10 };
 
-mylist.add_struct(&mylist, &mystruct, STRUCTURE, printer, comparator); //use add_struct(), pass printer and comparator functions
+//use add_struct(), pass printer and comparator functions
+mylist.add_struct(&mylist, &mystruct, STRUCTURE, printer, comparator);
 ```
 ### Sorting
 ```c
