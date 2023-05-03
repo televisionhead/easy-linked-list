@@ -118,7 +118,7 @@ mylist.sort(&mylist); //make sure every element has same type and none are UNSPE
 ```
 ### Split a list
 ```c
-list right = mylist.split(&mylist, 1); //split at index 1, make sure you destroy mylist and right when done
+list right = mylist.split(&mylist, 1); //split at index 1, make sure you destroy both halves when done
 ```
 ### Concatonate a list
 ```c
