@@ -36,7 +36,8 @@ mylist.destroy(&mylist);
 ## API Notes
 ### Overview
 * These notes are specific details about usage that may not be obvious, if you just want to learn how to use the API see the examples section
-* All available functions and what they do can be found in list.h
+* All available functions (and types) and what they do can be found in list.h
+* If you don't care about how I implemented it and you just wanna use my API, all you need to refer to is list.h (if you care, the function pointers in list.h point to equivalent internal functions in list.c, and the internal data of a linked list is contained in struct list_internal* data)
 * Every function except list_create() takes a reference to a list as the first parameter
 
 ### Types
