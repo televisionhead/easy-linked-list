@@ -93,19 +93,20 @@ int comparator(const void* first, const void* second) {
 
 struct test mystruct = { 10 };
 
-mylist.add_struct(&mylist, &mystruct, printer, comparator); //use add_struct(), pass printer and comparator functions
+//use add_struct(), pass printer and comparator functions
+mylist.add_struct(&mylist, &mystruct, printer, comparator);
 ```
 ### Remove all items of a certain value
 ```c
-mylist.remove(&mylist, &ten); //remove all items with value equal to the value of variable ten
+mylist.remove(&mylist, &ten); //remove all items with value = ten
 ```
 ### Remove first item of a certain value
 ```c
-mylist.remove_first(&mylist, &ten); //remove first occurence of item with a value equal to the value of variable ten
+mylist.remove_first(&mylist, &ten); //remove first occurence of item with value = ten
 ```
 ### Print a list
 ```c
-mylist.print(&mylist); //will print all printable items in a list regardless of type unless UNSPECIFIED or STRUCT without printer
+mylist.print(&mylist); //will print all printable items in a list
 ```
 ### Get the number of items
 ```c
