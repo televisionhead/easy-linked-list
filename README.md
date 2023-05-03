@@ -67,7 +67,16 @@ mylist.destroy(&mylist);
 * When you concat() two lists, the second list is not affected but first += second, so you still need to destroy() both
 
 ## Examples
-### Adding a struct
+### Get a list
+```c
+list mylist = list_create() //get a list (don't forget to #include "list.h")
+```
+### Add a primitive
+```c
+int ten = 10;
+mylist.add(&mylist, &ten, INTEGER); //adds variable ten to the list
+```
+### Add a struct
 ```c
 struct test {
   int val;
@@ -84,26 +93,45 @@ int comparator(const void* first, const void* second) {
 
 struct test mystruct = { 10 };
 
-//use add_struct(), pass printer and comparator functions
-mylist.add_struct(&mylist, &mystruct, printer, comparator);
+mylist.add_struct(&mylist, &mystruct, printer, comparator); //use add_struct(), pass printer and comparator functions
 ```
-### Sorting
+### Remove all items of a certain value
+```c
+mylist.remove(&mylist, &ten); //remove all items with value equal to the value of variable ten
+```
+### Remove first item of a certain value
+```c
+mylist.remove_first(&mylist, &ten); //remove first occurence of item with a value equal to the value of variable ten
+```
+### Print a list
+```c
+mylist.print(&mylist); //will print all printable items in a list regardless of type unless UNSPECIFIED or STRUCT without printer
+```
+### Get the number of items
+```c
+int num_items = mylist.size(&mylist); //num_items will contain the number of elements in mylist
+```
+### Sort a list
 ```c
 mylist.sort(&mylist); //make sure every element has same type and none are UNSPECIFIED
 ```
-### Splitting
+### Split a list
 ```c
-list right = mylist.split(&mylist, 1); //split at index 1, make sure you free right when done
+list right = mylist.split(&mylist, 1); //split at index 1, make sure you destroy mylist and right when done
 ```
-### Concatenating
+### Concatonate a list
 ```c
 mylist.concat(&mylist, &right); //right will be unchanged, mylist += right
 ```
-### Reversing
+### Reverse a list
 ```c
 mylist.reverse(&mylist); //reverse order of elements in list
 ```
-### Setting Precision
+### Set printing precision
 ```c
 mylist.setprecision(&mylist, 3); //floats and doubles will be printed with 3 decimal places
+```
+### Destroy a list
+```c
+mylist.destroy(&mylist); //always do this when your done to avoid memory leaks
 ```
