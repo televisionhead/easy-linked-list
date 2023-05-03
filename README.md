@@ -34,9 +34,12 @@ mylist.print(&mylist);
 mylist.destroy(&mylist);
 ```
 ## API Notes
+### Overview
+* These notes are specific details about usage that may not be obvious, if you just want to learn how to use the API see the examples section
 * All available functions and what they do can be found in list.h
 * Every function except list_create() takes a reference to a list as the first parameter
 
+### Types
 * Valid types are UNSPECIFIED, INTEGER, STRING, CHARACTER, DECIMAL_F, DECIMAL_D, STRUCTURE
 * Items with UNSPECIFIED type cannot be printed or removed
 * Items with STRUCTURE type can only be printed and removed if you pass a printer and comparator function to add_struct()
@@ -44,15 +47,20 @@ mylist.destroy(&mylist);
 * Instead, use add_struct() for adding structs if you need a printer and/or comparator (you don't have to pass STRUCTURE, too)
 * You can only sort() a list if all its elements have the same type, none are UNSPECIFIED, and STRUCTURE types have comparators
 
+### Printing and comparing structs
 * Printer functions return void and take one const void* as a parameter: void (*)(const void*)
 * Comparator functions return an int and take two const void* as parameters: int (*)(const void*, const void*)
+* You pass these to add_struct() (not add()!) to define how your struct should be printed and/or compared
 
+### Removing
 * The remove() function removes all occurences from the list
 * If you want to remove just the first occurence, call remove_first()
 
+### Precision
 * By default, floats and doubles print with a precision of 6 decimal places (use set_precision() to change)
-* Floats and doubles are compared with a tolerance of 0.000001 (change #define TOLERANCE to a different value if you want)
+* Floats and doubles are compared with a precision of 0.000001 (change #define TOLERANCE to a different value if you want)
 
+### Freeing memory
 * Always destroy() your list when you are done to free the memory occupied by it
 * The split() function mallocs a new list, so don't forget to destroy() it when your done
 * When you concat() two lists, the second list is not affected but first += second, so you still need to destroy() both
