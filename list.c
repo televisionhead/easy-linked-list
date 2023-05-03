@@ -35,6 +35,7 @@ struct list_internal {
 	int size;
 };
 
+//dont love global variables but other ways are a mess
 char precisionstr[10] = "%.6f\n";
 
 //functions for printing various data types
@@ -96,8 +97,8 @@ static void list_add_end(list* mylist, void* item, int datatype, void (*printer)
 //add a primitive to the end of the list. just calls list_add_end with printer and comparator set to NULL 
 static void list_add(list* mylist, void* item, int datatype) { list_add_end(mylist, item, datatype, NULL, NULL); }
 
-//add a struct to the end of the list. just calls list_add_end with the values you pass for printer and comparator
-static void list_add_struct(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, datatype, printer, comparator); }
+//add a struct to the end of the list. just calls list_add_end with STRUCTURE enum and the values you pass for printer and comparator
+static void list_add_struct(list* mylist, void* item, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, STRUCTURE, printer, comparator); }
 
 //find an item based on its data (returns NULL if not found)
 static struct link* list_find(struct list_internal* mylist_internal, void* data) {
@@ -166,7 +167,7 @@ static int list_remove_all(list* mylist, void* data) {
 	return 0;
 }
 
-//just calls list_remove_all if your too lazy to type remove_all
+//just calls list_remove_all if your too lazy to type .remove_all
 static int list_remove(list* mylist, void* data) { return list_remove_all(mylist, data); }
 
 //print every element of the list
@@ -264,7 +265,7 @@ static void list_concat(list* first, list* second) {
 	struct link* curr = second->data->head;
 
 	while(curr != NULL) {
-		first->add_struct(first, curr->data, curr->datatype, curr->printer, curr->comparator);
+		list_add_end(first, curr->data, curr->datatype, curr->printer, curr->comparator);
 		curr = curr->next;
 	}
 }
