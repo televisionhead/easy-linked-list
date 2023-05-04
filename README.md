@@ -109,6 +109,8 @@ mylist.destroy(&mylist); //always do this when your done to avoid memory leaks
 * All available functions (and types) and what they do can be found in list.h
 * If you don't care about how I implemented it and you just wanna use my API, all you need to refer to is list.h (if you care, the function pointers in list.h point to equivalent internal functions in list.c, and the internal data of a linked list is contained in struct list_internal* data)
 * Every function except list_create() takes a reference to a list as the first parameter
+* If you don't care about debugging, you can compile with the -DNDEBUG flag: gcc main.c list.c -o main -DNDEBUG
+* For new C programmers on Windows: install a GNU toolchain devkit like MinGW-w64 or Cygwin, download/clone this repo and navigate to its directory in the devkit environment/shell, run the compile command (or ./compile.sh), then do ./main to run the code in main.c, which you can modify from here to do whatever you want
 
 ### Types
 * Valid types are UNSPECIFIED, INTEGER, STRING, CHARACTER, DECIMAL_F, DECIMAL_D, STRUCTURE
