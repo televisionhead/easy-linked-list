@@ -245,7 +245,7 @@ static list list_split(list* mylist, int index) {
 
 	for(int i = 0; i < index-1; i++) curr = curr->next;
 
-	list ret = list_create();
+	list ret = create_list();
 	ret.data->head = curr->next;
 	ret.data->head->prev = NULL;
 	ret.data->tail = mylist_internal->tail;
@@ -318,10 +318,10 @@ static void list_destroy(list* mylist) {
 }
 
 //get a list
-list list_create() {
+list create_list() {
 	struct list_internal* myinternal = malloc(sizeof(struct list_internal));
 
-	assert(myinternal != NULL && "malloc returned NULL in list_create()");
+	assert(myinternal != NULL && "malloc returned NULL in create_list()");
 
 	myinternal->head = NULL;
 	myinternal->tail = NULL;

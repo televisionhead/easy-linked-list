@@ -24,6 +24,6 @@ typedef struct list {
 enum datatype { UNSPECIFIED = 0, INTEGER = 1, STRING = 2, CHARACTER = 3, DECIMAL_F = 4, DECIMAL_D = 5, STRUCTURE = 6 };
 
 //get a list
-list list_create();
+list create_list();
 
 #endif

@@ -2,7 +2,7 @@
 
 int main() {
 	//get a list
-	list mylist = list_create();
+	list mylist = create_list();
 
 	//define some variables
 	int first = 10;
