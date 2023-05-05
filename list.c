@@ -60,7 +60,7 @@ static int double_compare(const void* first, const void* second) { double diff =
 static int (*const comparator_table[NUM_DATATYPES])(const void*, const void*) = { NULL, int_compare, str_compare, char_compare, float_compare, double_compare, NULL };
 
 //add an item to the end of the list
-static void list_add_end(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) {
+void list_add_end(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) {
 	assert(mylist != NULL && item != NULL && "NULL passed to list_add()");
 	assert(datatype >= UNSPECIFIED && datatype <= STRUCTURE && "datatype passed to list_add() is invalid!");
 
@@ -245,7 +245,7 @@ static list list_split(list* mylist, int index) {
 
 	for(int i = 0; i < index-1; i++) curr = curr->next;
 
-	list ret = list_create();
+	list ret = create_list();
 	ret.data->head = curr->next;
 	ret.data->head->prev = NULL;
 	ret.data->tail = mylist_internal->tail;
@@ -318,10 +318,10 @@ static void list_destroy(list* mylist) {
 }
 
 //get a list
-list list_create() {
+list create_list() {
 	struct list_internal* myinternal = malloc(sizeof(struct list_internal));
 
-	assert(myinternal != NULL && "malloc returned NULL in list_create()");
+	assert(myinternal != NULL && "malloc returned NULL in create_list()");
 
 	myinternal->head = NULL;
 	myinternal->tail = NULL;

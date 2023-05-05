@@ -20,10 +20,12 @@ typedef struct list {
 	void (*const destroy)(struct list*); //free the memory occupied by the list
 } list;
 
+void list_add_end(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*));
+
 //the data types we can use externally (note if STRUCTURE is passed to add(), printer and comparator will be NULL automatically. If you need these, use add_struct() which doesnt require you to pass a data type)
 enum datatype { UNSPECIFIED = 0, INTEGER = 1, STRING = 2, CHARACTER = 3, DECIMAL_F = 4, DECIMAL_D = 5, STRUCTURE = 6 };
 
 //get a list
-list list_create();
+list create_list();
 
 #endif
