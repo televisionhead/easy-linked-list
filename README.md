@@ -1,13 +1,11 @@
 ## Features
-* Easy to use API
+* Easy-to-use API
 * User-defined types
 * Multiple types per list
-* Printing
 * Sorting
 * Splitting
 * Concatenating
 * Reversing
-* More!
 
 ## Description
 This linked list implementation aims to be easy to use, extremely performant, generic, and feature-rich. Not only does it strike a balance between these but I would say it excels in all aspects. It achieves dynamic dispatch at runtime through the use of vtables, allowing you to use any primitive or non-primitive data type in a list (you can even have multiple different types in the same list, though you cannot call sort() on such a list).
