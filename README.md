@@ -144,6 +144,7 @@ mylist.destroy(&mylist); //always do this when your done to avoid memory leaks
 * If you add a STRUCTURE type with add(), the printer and comparator will automatically be NULL
 * Instead, use add_struct() for adding structs if you need a printer and/or comparator (you don't have to pass STRUCTURE, too)
 * You can only sort() a list if all its elements have the same type, none are UNSPECIFIED, and STRUCTURE types have comparators
+* If you pass the wrong type to a function, you might get unexpected behavior (the operation you tried probably returned -1)
 
 ### Printing and comparing structs
 * Printer functions return void and take one const void* as a parameter: void (*)(const void*)
