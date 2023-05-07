@@ -61,7 +61,7 @@ list mylist = create_list() //get a list (don't forget to #include "list.h")
 ### Add a primitive
 ```c
 int ten = 10;
-mylist.add(&mylist, &ten, INTEGER); //adds variable ten to the list
+mylist.add(&mylist, &ten, INT); //adds variable ten to the list
 ```
 ### Add a struct
 ```c
@@ -86,15 +86,15 @@ mylist.add_struct(&mylist, &mystruct, printer, comparator);
 ### Set data of a link
 ```c
 int new = 20;
-mylist.set(&mylist, &ten, &new, INTEGER); //set first occurence of value of ten to value of new
+mylist.set(&mylist, &ten, &new, INT); //set first occurence of value of ten to value of new
 ```
 ### Remove all items of a certain value
 ```c
-mylist.remove(&mylist, &ten, INTEGER); //remove all items with same value as ten
+mylist.remove(&mylist, &ten, INT); //remove all items with same value as ten
 ```
 ### Remove first item of a certain value
 ```c
-mylist.remove_first(&mylist, &ten, INTEGER); //remove first item with same value as ten
+mylist.remove_first(&mylist, &ten, INT); //remove first item with same value as ten
 ```
 ### Print a list
 ```c
