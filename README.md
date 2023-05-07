@@ -13,7 +13,7 @@
 This linked list implementation aims to be easy to use, extremely performant, generic, and feature-rich. Not only does it strike a balance between these but I would say it excels in all aspects. It achieves dynamic dispatch at runtime through the use of vtables, allowing you to use any primitive or non-primitive data type in a list (you can even have multiple different types in the same list, though you cannot call sort() on such a list).
 
 ### Contributing
-If you want to contribute a feature or optimization, fix a bug in the code or problem with my testing methodology, or if you just have a suggestion feel free to make a pull request or issue. Here is a general guideline for adding a new "method" to the linked list (aka an operation you can do on a list):
+If you want to contribute a feature or optimization, fix a bug in the code or a problem with my testing methodology, or if you just have a suggestion, feel free to make a pull request or issue. Here is a general guideline for adding a new "method" to the linked list (aka an operation you can do on a list):
 
 1. Define an internal static function in list.c which does the operation (to follow the naming convention, make it start with list_ ie. list_add()). 
 
@@ -85,15 +85,16 @@ mylist.add_struct(&mylist, &mystruct, printer, comparator);
 ```
 ### Set data of a link
 ```c
-mylist.set(&mylist, &original, &new, INTEGER); //set first occurence of data original to data new
+int new = 20;
+mylist.set(&mylist, &ten, &new, INTEGER); //set first occurence of value of ten to value of new
 ```
 ### Remove all items of a certain value
 ```c
-mylist.remove(&mylist, &ten, INTEGER); //remove all items with value = ten
+mylist.remove(&mylist, &ten, INTEGER); //remove all items with same value as ten
 ```
 ### Remove first item of a certain value
 ```c
-mylist.remove_first(&mylist, &ten, INTEGER); //remove first occurence of item with value = ten
+mylist.remove_first(&mylist, &ten, INTEGER); //remove first item with same value as ten
 ```
 ### Print a list
 ```c
