@@ -36,7 +36,7 @@ struct list_internal {
 };
 
 //precision formatting for printing floats and doubles
-static char precisionstr[10] = "%.6f\n";
+static char precisionstr[10] = "%.3f\n";
 
 //functions for printing various data types
 static void int_print(const void* data) { printf("%d\n", *(int*)data); }
