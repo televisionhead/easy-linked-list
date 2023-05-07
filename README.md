@@ -1,14 +1,16 @@
 ## Features
 * Easy-to-use API
+* Fast and scalable
 * User-defined types
-* Multiple types per list
+* Multi-type lists
 * Sorting
 * Splitting
 * Concatenating
 * Reversing
+* More!
 
 ## Description
-This linked list implementation aims to be easy to use, fast, type-generic, scalable, flexible, maintainable, and feature-rich. Not only does it strike a balance between these, but it excels in all aspects. It achieves dynamic dispatch at runtime through the use of vtables, allowing you to store and perform operations on any primitive or non-primitive data type, and even store multiple different data types in the same list (though you cannot call sort() on such a list). 
+This linked list implementation aims to be easy to use, fast, type-generic, scalable, flexible, maintainable, and feature-rich. Not only does it strike a balance between these, but it excels in all aspects. It achieves dynamic dispatch at runtime through the use of vtables, allowing you to store and perform operations on any primitive or non-primitive data type, and even have multiple different data types in the same list (though you cannot call sort() on such a list). The purpose of this project is to provide other C programmers with a fast and simple linked list that they can easily add to their own projects and start using so they don't have to implement one themselves or import a heavy data structure library.
 
 ### Contributing
 If you want to contribute a feature or optimization, fix a bug in the code or a problem with my testing methodology, or if you just have a suggestion, feel free to make a pull request or issue. Here is a general guideline for adding a new "method" to the linked list (aka an operation you can do on a list):
