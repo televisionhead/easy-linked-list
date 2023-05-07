@@ -8,7 +8,7 @@
 * Reversing
 
 ## Description
-This linked list implementation aims to be easy to use, fast, type-generic, scalable, flexible, maintainable, and feature-rich. Not only does it strike a balance between these, but it excels in all aspects. It achieves dynamic dispatch at runtime through the use of vtables, allowing you to use any primitive or non-primitive data type in a list (you can even have multiple different types in the same list, though you cannot call sort() on such a list).
+This linked list implementation aims to be easy to use, fast, type-generic, scalable, flexible, maintainable, and feature-rich. Not only does it strike a balance between these, but it excels in all aspects. It achieves dynamic dispatch at runtime through the use of vtables, allowing you to store and perform operations on any primitive or non-primitive data type, and even store multiple different data types in the same list (though you cannot call sort() on such a list). 
 
 ### Contributing
 If you want to contribute a feature or optimization, fix a bug in the code or a problem with my testing methodology, or if you just have a suggestion, feel free to make a pull request or issue. Here is a general guideline for adding a new "method" to the linked list (aka an operation you can do on a list):
@@ -120,7 +120,7 @@ mylist.reverse(&mylist); //reverse order of elements in list
 ```
 ### Set printing precision
 ```c
-mylist.setprecision(&mylist, 3); //floats and doubles will be printed with 3 decimal places
+mylist.setprecision(&mylist, 6); //floats and doubles will be printed with 6 decimal places
 ```
 ### Destroy a list
 ```c
