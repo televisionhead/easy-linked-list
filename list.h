@@ -10,7 +10,7 @@ typedef struct list {
 	void (*const add_struct)(struct list*, void*, void (*)(const void*), int (*)(const void*, const void*)); //add a struct to the end of the list. just calls list_add_end with STRUCT enum and the values you pass for printer and comparator
 	int (*const set)(struct list*, void*, void*, int); //set the data of the first link with old_data to new_data. returns -1 if link wasnt found, 0 otherwise
 	int (*const remove_first)(struct list*, void*, int); //remove first occurence of item based on its data (returns -1 if not found, 0 if successfully removed)
-	int (*const remove)(struct list*, void*, int); //just calls list_remove_all if your too lazy to type remove_all
+	int (*const remove)(struct list*, void*, int); //remove all occurences of an item with the given data (returns 0 if one was found and removed, otherwise -1)
 	void (*const print)(struct list*); //print every element of the list
 	int (*const size)(struct list*); //get the number of elements in the list
 	void (*const sort)(struct list*); //sort the list using merge sort. list elements must all be the same data type

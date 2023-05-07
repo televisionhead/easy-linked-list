@@ -67,6 +67,8 @@ static void list_add_end(list* mylist, void* item, int datatype, void (*printer)
 	
 	assert(toadd != NULL && "malloc returned NULL in list_add()");
 
+	if(datatype == NONE) printf("WARNING: adding a link with datatype NONE. This link will not be able to be printed or compared.\n\n");
+
 	struct list_internal* mylist_internal = mylist->data;
 
 	toadd->next = NULL;
@@ -94,10 +96,15 @@ static void list_add_end(list* mylist, void* item, int datatype, void (*printer)
 }
 
 //add a primitive to the end of the list. just calls list_add_end with printer and comparator set to NULL 
-static void list_add(list* mylist, void* item, int datatype) { list_add_end(mylist, item, datatype, NULL, NULL); }
+static void list_add(list* mylist, void* item, int datatype) {
+	if(datatype == STRUCT) printf("WARNING: adding a STRUCT using add(). If you want to be able to print or compare a STRUCT, use add_struct(), which takes printer and comparator functions.\n\n");
+	list_add_end(mylist, item, datatype, NULL, NULL); 
+}
 
 //add a struct to the end of the list. just calls list_add_end with STRUCT enum and the values you pass for printer and comparator
-static void list_add_struct(list* mylist, void* item, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, STRUCT, printer, comparator); }
+static void list_add_struct(list* mylist, void* item, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { 
+	list_add_end(mylist, item, STRUCT, printer, comparator); 
+}
 
 //find an item based on its data (returns NULL if not found)
 static struct link* list_find(struct list_internal* mylist_internal, void* data, int datatype) {	
@@ -203,6 +210,8 @@ static void list_print(list* mylist) {
 		if(curr->printer != NULL) curr->printer(curr->data);
 		curr = curr->next;
 	}
+
+	printf("\n");
 }
 
 //get the number of elements in the list
