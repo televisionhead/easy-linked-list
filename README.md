@@ -71,7 +71,7 @@ struct test {
 
 void printer(const void* item) {
   struct test* mystruct = (struct test*)item;
-  printf("first = %d\n", mystruct->val);
+  printf("val = %d\n", mystruct->val);
 }
 
 int comparator(const void* first, const void* second) {
