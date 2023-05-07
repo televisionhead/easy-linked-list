@@ -45,7 +45,7 @@ mylist.add(&mylist, &second, STRING);
 mylist.add(&mylist, &third, DECIMAL_F);
 
 //remove an item
-mylist.remove(&mylist, &first);
+mylist.remove(&mylist, &first, INTEGER);
 
 //print list contents
 mylist.print(&mylist);
@@ -85,11 +85,11 @@ mylist.add_struct(&mylist, &mystruct, printer, comparator);
 ```
 ### Remove all items of a certain value
 ```c
-mylist.remove(&mylist, &ten); //remove all items with value = ten
+mylist.remove(&mylist, &ten, INTEGER); //remove all items with value = ten
 ```
 ### Remove first item of a certain value
 ```c
-mylist.remove_first(&mylist, &ten); //remove first occurence of item with value = ten
+mylist.remove_first(&mylist, &ten, INTEGER); //remove first occurence of item with value = ten
 ```
 ### Print a list
 ```c
