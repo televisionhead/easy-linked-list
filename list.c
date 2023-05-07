@@ -39,15 +39,14 @@ struct list_internal {
 static char precisionstr[10] = "%.6f\n";
 
 //functions for printing various data types
-static void no_print(const void* data) { (void)data; } //gets rid of unused parameter warning
 static void int_print(const void* data) { printf("%d\n", *(int*)data); }
 static void str_print(const void* data) { printf("%s\n", *(char**)data); }
 static void char_print(const void* data) { printf("%c\n", *(char*)data); }
-static void decimalF_print(const void* data) { printf(precisionstr, *(float*)data); }
-static void decimalD_print(const void* data) { printf(precisionstr, *(double*)data); }
+static void float_print(const void* data) { printf(precisionstr, *(float*)data); }
+static void double_print(const void* data) { printf(precisionstr, *(double*)data); }
 
 //array of the above printer functions
-static void (*const printer_table[NUM_DATATYPES])(const void*) = { no_print, int_print, str_print, char_print, decimalF_print, decimalD_print, no_print };
+static void (*const printer_table[NUM_DATATYPES])(const void*) = { NULL, int_print, str_print, char_print, float_print, double_print, NULL };
 
 //functions for comparing various data types (negative value means first < second, positive means first > second, 0 means equal)
 static int int_compare(const void* first, const void* second) { return (*(int*)first - *(int*)second); }
@@ -62,7 +61,7 @@ static int (*const comparator_table[NUM_DATATYPES])(const void*, const void*) = 
 //add an item to the end of the list
 static void list_add_end(list* mylist, void* item, int datatype, void (*printer)(const void*), int (*comparator)(const void*, const void*)) {
 	assert(mylist != NULL && item != NULL && "NULL passed to list_add()");
-	assert(datatype >= UNSPECIFIED && datatype <= STRUCTURE && "datatype passed to list_add() is invalid!");
+	assert(datatype >= NONE && datatype <= STRUCT && "datatype passed to list_add() is invalid!");
 
 	struct link* toadd = (struct link*)malloc(sizeof(struct link));
 	
@@ -97,13 +96,13 @@ static void list_add_end(list* mylist, void* item, int datatype, void (*printer)
 //add a primitive to the end of the list. just calls list_add_end with printer and comparator set to NULL 
 static void list_add(list* mylist, void* item, int datatype) { list_add_end(mylist, item, datatype, NULL, NULL); }
 
-//add a struct to the end of the list. just calls list_add_end with STRUCTURE enum and the values you pass for printer and comparator
-static void list_add_struct(list* mylist, void* item, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, STRUCTURE, printer, comparator); }
+//add a struct to the end of the list. just calls list_add_end with STRUCT enum and the values you pass for printer and comparator
+static void list_add_struct(list* mylist, void* item, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, STRUCT, printer, comparator); }
 
 //find an item based on its data (returns NULL if not found)
-static struct link* list_find(struct list_internal* mylist_internal, void* data, int datatype) {
+static struct link* list_find(struct list_internal* mylist_internal, void* data, int datatype) {	
 	assert(mylist_internal != NULL && data != NULL && "NULL passed to list_find()");
-	assert(datatype >= UNSPECIFIED && datatype <= STRUCTURE && "datatype passed to list_find() is invalid!");
+	assert(datatype >= NONE && datatype <= STRUCT && "datatype passed to list_find() is invalid!");
 
 	struct link* curr = mylist_internal->head;
 
@@ -135,7 +134,7 @@ static int list_set(list* mylist, void* old_data, void* new_data, int datatype) 
 }
 
 //remove first occurence of item based on its data (returns -1 if not found, 0 if successfully removed)
-static int list_remove_first(list* mylist, void* data, int datatype) {
+static int list_remove_first(list* mylist, void* data, int datatype) {	
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove()");
 
 	struct list_internal* mylist_internal = mylist->data;
@@ -143,6 +142,7 @@ static int list_remove_first(list* mylist, void* data, int datatype) {
 	assert(mylist_internal->size != 0 && "Cannot remove anything from an empty list!");
 
 	struct link* to_remove;
+
 	if((to_remove = list_find(mylist_internal, data, datatype)) == NULL) return -1;
 
 	if(to_remove == mylist_internal->head) {
@@ -171,16 +171,23 @@ static int list_remove_first(list* mylist, void* data, int datatype) {
 	return 0;
 }
 
-//remove all occurences of an item with the given data (returns 0 if at least one was removed, else -1)
+//remove all occurences of an item with the given data (returns 0 if one was found and removed, otherwise -1)
 static int list_remove_all(list* mylist, void* data, int datatype) {
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove_all()");
 
-	int ret;
-	if((ret = list_remove_first(mylist, data, datatype)) == -1) return -1;
+	int ret = -1;
+	int upper = mylist->data->size;
 
-	while(ret == 0 && mylist->data->size != 0) ret = list_remove_first(mylist, data, datatype);
+	for(int i = 0; i < upper; i++) {
+		if(mylist->data->size == 0) break;
+		if(list_remove_first(mylist, data, datatype) == 0) ret = 0;
+	}
 
-	return 0;
+	#ifndef NDEBUG
+		if(ret == -1) printf("list_remove_all() is returning -1\n");
+	#endif
+
+	return ret;
 }
 
 //just calls list_remove_all if your too lazy to type .remove_all
@@ -193,7 +200,7 @@ static void list_print(list* mylist) {
 	struct link* curr = mylist->data->head;
 
 	while(curr != NULL) {
-		curr->printer(curr->data);
+		if(curr->printer != NULL) curr->printer(curr->data);
 		curr = curr->next;
 	}
 }
@@ -211,7 +218,7 @@ static struct link* list_merge(struct link* firsthead, struct link* secondhead) 
 	if(secondhead == NULL) return firsthead;
 
 	assert(firsthead->datatype == secondhead->datatype && "List has multiple different data types, so it cannot be sorted");
-	assert(firsthead->comparator != NULL && "Link with UNSPECIFIED data type has been encountered, so the list cannot be sorted");
+	assert(firsthead->comparator != NULL && "Link with NONE data type has been encountered, so the list cannot be sorted");
 
 	if(firsthead->comparator(firsthead->data, secondhead->data) < 0) {
 		firsthead->next = list_merge(firsthead->next, secondhead);

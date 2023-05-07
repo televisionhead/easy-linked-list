@@ -10,12 +10,12 @@ int main() {
 	float third = 100.420f;
 
 	//add them to the list
-	mylist.add(&mylist, &first, INTEGER);
+	mylist.add(&mylist, &first, INT);
 	mylist.add(&mylist, &second, STRING);
-	mylist.add(&mylist, &third, DECIMAL_F);
+	mylist.add(&mylist, &third, FLOAT);
 
 	//remove an item
-	mylist.remove(&mylist, &first, INTEGER);
+	mylist.remove(&mylist, &first, INT);
 
 	//print list contents
 	mylist.print(&mylist);

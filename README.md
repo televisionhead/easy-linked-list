@@ -40,12 +40,12 @@ char* second = "test";
 float third = 100.420f;
 
 //add them to the list
-mylist.add(&mylist, &first, INTEGER);
+mylist.add(&mylist, &first, INT);
 mylist.add(&mylist, &second, STRING);
-mylist.add(&mylist, &third, DECIMAL_F);
+mylist.add(&mylist, &third, FLOAT);
 
 //remove an item
-mylist.remove(&mylist, &first, INTEGER);
+mylist.remove(&mylist, &first, INT);
 
 //print list contents
 mylist.print(&mylist);
@@ -106,7 +106,7 @@ int num_items = mylist.size(&mylist); //num_items will contain the number of ele
 ```
 ### Sort a list
 ```c
-mylist.sort(&mylist); //make sure every element has same type and none are UNSPECIFIED
+mylist.sort(&mylist); //make sure every element has same type and none are NONE
 ```
 ### Split a list
 ```c
@@ -138,12 +138,12 @@ mylist.destroy(&mylist); //always do this when your done to avoid memory leaks
 * For new C programmers on Windows: install a GNU toolchain devkit like MinGW-w64 or Cygwin, download/clone this repo and navigate to its directory in the devkit environment/shell, run the compile command (or ./compile.sh), then do ./main to run the code in main.c, which you can modify from here to do whatever you want
 
 ### Types
-* Valid types are UNSPECIFIED, INTEGER, STRING, CHARACTER, DECIMAL_F, DECIMAL_D, STRUCTURE
-* Items with UNSPECIFIED type cannot be printed or removed
-* Items with STRUCTURE type can only be printed and removed if you pass a printer and comparator function to add_struct()
-* If you add a STRUCTURE type with add(), the printer and comparator will automatically be NULL
-* Instead, use add_struct() for adding structs if you need a printer and/or comparator (you don't have to pass STRUCTURE, too)
-* You can only sort() a list if all its elements have the same type, none are UNSPECIFIED, and STRUCTURE types have comparators
+* Valid types are NONE, INT, STRING, CHAR, FLOAT, DOUBLE, and STRUCT
+* Items with NONE type cannot be printed or removed
+* Items with STRUCT type can only be printed and removed if you pass a printer and comparator function to add_struct()
+* If you add a STRUCT type with add(), the printer and comparator will automatically be NULL
+* Instead, use add_struct() for adding structs if you need a printer and/or comparator (you don't have to pass STRUCT, too)
+* You can only sort() a list if all its elements have the same type, none are NONE, and STRUCT types have comparators
 * If you pass the wrong type to a function, you might get unexpected behavior (the operation you tried probably returned -1)
 
 ### Printing and comparing structs
