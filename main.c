@@ -15,12 +15,13 @@ int main() {
 	mylist.add(&mylist, &third, DECIMAL_F);
 
 	//remove an item
-	mylist.remove(&mylist, &first);
+	mylist.remove(&mylist, &first, INTEGER);
 
 	//print list contents
 	mylist.print(&mylist);
 
 	//destroy list when done
 	mylist.destroy(&mylist);
-    return 0;
+	
+	return 0;
 }

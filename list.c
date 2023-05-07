@@ -35,8 +35,8 @@ struct list_internal {
 	int size;
 };
 
-//dont love global variables but other ways are a mess
-char precisionstr[10] = "%.6f\n";
+//precision formatting for printing floats and doubles
+static char precisionstr[10] = "%.6f\n";
 
 //functions for printing various data types
 static void no_print(const void* data) { (void)data; } //gets rid of unused parameter warning
@@ -101,13 +101,14 @@ static void list_add(list* mylist, void* item, int datatype) { list_add_end(myli
 static void list_add_struct(list* mylist, void* item, void (*printer)(const void*), int (*comparator)(const void*, const void*)) { list_add_end(mylist, item, STRUCTURE, printer, comparator); }
 
 //find an item based on its data (returns NULL if not found)
-static struct link* list_find(struct list_internal* mylist_internal, void* data) {
+static struct link* list_find(struct list_internal* mylist_internal, void* data, int datatype) {
 	assert(mylist_internal != NULL && data != NULL && "NULL passed to list_find()");
+	assert(datatype >= UNSPECIFIED && datatype <= STRUCTURE && "datatype passed to list_find() is invalid!");
 
 	struct link* curr = mylist_internal->head;
 
 	while(curr != NULL) {
-		if(curr->comparator != NULL) {
+		if(curr->datatype == datatype && curr->comparator != NULL) {
 			if(curr->comparator(curr->data, data) == 0) return curr;
 		}
 
@@ -117,8 +118,24 @@ static struct link* list_find(struct list_internal* mylist_internal, void* data)
 	return NULL;
 }
 
+//set the data of the first link with old_data to new_data. returns -1 if link wasnt found, 0 otherwise
+static int list_set(list* mylist, void* old_data, void* new_data, int datatype) {
+	assert(mylist != NULL && old_data != NULL && new_data != NULL && "NULL passed to list_set()");
+
+	struct list_internal* mylist_internal = mylist->data;
+
+	assert(mylist_internal->size != 0 && "Cannot set a value in an empty list!");
+
+	struct link* to_set;
+	if((to_set = list_find(mylist_internal, old_data, datatype)) == NULL) return -1;
+
+	to_set->data = new_data;
+
+	return 0;
+}
+
 //remove first occurence of item based on its data (returns -1 if not found, 0 if successfully removed)
-static int list_remove_first(list* mylist, void* data) {
+static int list_remove_first(list* mylist, void* data, int datatype) {
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove()");
 
 	struct list_internal* mylist_internal = mylist->data;
@@ -126,8 +143,7 @@ static int list_remove_first(list* mylist, void* data) {
 	assert(mylist_internal->size != 0 && "Cannot remove anything from an empty list!");
 
 	struct link* to_remove;
-
-	if((to_remove = list_find(mylist_internal, data)) == NULL) return -1;
+	if((to_remove = list_find(mylist_internal, data, datatype)) == NULL) return -1;
 
 	if(to_remove == mylist_internal->head) {
 		mylist_internal->head = to_remove->next;
@@ -156,19 +172,19 @@ static int list_remove_first(list* mylist, void* data) {
 }
 
 //remove all occurences of an item with the given data (returns 0 if at least one was removed, else -1)
-static int list_remove_all(list* mylist, void* data) {
+static int list_remove_all(list* mylist, void* data, int datatype) {
 	assert(mylist != NULL && data != NULL && "NULL passed to list_remove_all()");
 
 	int ret;
-	if((ret = list_remove_first(mylist, data)) == -1) return -1;
+	if((ret = list_remove_first(mylist, data, datatype)) == -1) return -1;
 
-	while(ret == 0 && mylist->data->size != 0) ret = list_remove_first(mylist, data);
+	while(ret == 0 && mylist->data->size != 0) ret = list_remove_first(mylist, data, datatype);
 
 	return 0;
 }
 
 //just calls list_remove_all if your too lazy to type .remove_all
-static int list_remove(list* mylist, void* data) { return list_remove_all(mylist, data); }
+static int list_remove(list* mylist, void* data, int datatype) { return list_remove_all(mylist, data, datatype); }
 
 //print every element of the list
 static void list_print(list* mylist) {
@@ -295,7 +311,7 @@ static void list_reverse(list* mylist) {
 //set the number of decimal places for printing floats and doubles
 static void list_setprecision(list* mylist, int precision) {
 	assert(mylist != NULL && "NULL passed to list_setprecision()");
-	assert(precision > 0 && "Cannot set precision to negative or zero");
+	assert(precision > -1 && precision < 21 && "Cannot set precision to negative or greater than 20");
 
 	sprintf(precisionstr, "%%.%df\n", precision);
 }
@@ -334,6 +350,7 @@ list create_list() {
 		//API function pointers
 		.add = list_add,
 		.add_struct = list_add_struct,
+		.set = list_set,
 		.remove_first = list_remove_first,
 		.remove = list_remove,
 		.print = list_print,
