@@ -83,6 +83,10 @@ struct test mystruct = { 10 };
 //use add_struct(), pass printer and comparator functions
 mylist.add_struct(&mylist, &mystruct, printer, comparator);
 ```
+### Set data of a link
+```c
+mylist.set(&mylist, &original, &new, INTEGER); //set first occurence of data original to data new
+```
 ### Remove all items of a certain value
 ```c
 mylist.remove(&mylist, &ten, INTEGER); //remove all items with value = ten
@@ -105,7 +109,7 @@ mylist.sort(&mylist); //make sure every element has same type and none are UNSPE
 ```
 ### Split a list
 ```c
-list right = mylist.split(&mylist, 1); //split at index 1, make sure you destroy both halves when done
+list right = mylist.split(&mylist, 3); //split at index 3, make sure you destroy both halves when done
 ```
 ### Concatonate a list
 ```c
